@@ -77,13 +77,11 @@ class DBStorage:
 
     def get(self, cls, id):
         """method to retrieve one object"""
-        if cls not in classes.values():
-            return None
-
-        all_objs = models.storage.all(cls)
-        for value in all_objs.value():
-            if (value.id == id):
-                return value
+        if cls in classes.values() and id and type(id) == str:
+            all_objs = self.all(cls)
+            for key, value in all_objs.items():
+                if key.split(".")[1] == id:
+                    return value
 
         return None
 
@@ -91,13 +89,7 @@ class DBStorage:
         """Method Returns the number of objects in storage 
         matching the given class. If no class is passed, 
         returns the count of all objects in storage"""
-        all_class = classes.values()
-
-        if not cls:
-            count = 0
-            for clx in all_classes:
-                count += len(models.storage.all(clx).values())
-        else:
-            count = len(models.storage.all(clx).values())
-
-        return count
+        ret_data = self.all(cls)
+        if cls in classes.values():
+            ret_data = self.all(cls)
+        return len(ret_data)
